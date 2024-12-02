@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog API</title>
+    <link rel="stylesheet" href="./main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #5a68d8;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px;
+        }
+
+        button:hover {
+            background-color: #566ee7;
+            transform: translateY(-3px);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1300px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #fff;
+        }
+
+        .card h3 {
+            margin: 15px 0;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        #errorMsg {
+            margin-top: 20px;
+            color: #ff4e4e;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dog API</h1>
+    <button id="fetchBtn">Get Random Dogs Image</button>
+    <div id="dogContainer" class="container"></div>
+    <p id="errorMsg"></p>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', function () {
+            const dogContainer = document.getElementById('dogContainer');
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '';
+
+            fetch('https://dog.ceo/api/breeds/image/random')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const url = data.message;
+                        const breed = url.split('/')[4];
+
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = breed;
+
+                        const name = document.createElement('h3');
+                        name.textContent = breed;
+
+                        card.appendChild(img);
+                        card.appendChild(name);
+                        dogContainer.appendChild(card);
+                    } else {
+                        errorMsg.textContent = 'Failed to fetch dog image.';
+                    }
+                })
+                .catch(() => {
+                    errorMsg.textContent = 'An error occurred. Please try again.';
+                });
+        });
+    </script>
+
+</body>
+
+</html>
